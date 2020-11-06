@@ -4,11 +4,13 @@ class Bird extends BaseClass {
     this.image = loadImage("sprites/bird.png");
     this.smokeImage = loadImage("sprites/smoke.png");
     this.trajectory =[];
+    this.Visiblity = 255;
   }
 
   display() {
-    //this.body.position.x = mouseX;
-    //this.body.position.y = mouseY;
+    if(gameState === "onSling"){
+      Matter.Body.setAngle(this.body,0);
+    }
 
     super.display();
 
@@ -19,7 +21,12 @@ class Bird extends BaseClass {
    
 
     for(var i=0; i<this.trajectory.length; i++){
+      push();
+      this.Visiblity = this.Visiblity - 0.5;
+      tint(255,this.Visiblity);
       image(this.smokeImage, this.trajectory[i][0], this.trajectory[i][1]);
+      pop();
+
     }
   }
 }

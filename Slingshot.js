@@ -18,6 +18,7 @@ class SlingShot{
     }
     
     fly(){
+        Matter.Body.applyForce(this.sling.bodyA,this.sling.bodyA.position,{x:this.pointB.x,y:this.pointB.y});
         this.sling.bodyA = null;
     }
 

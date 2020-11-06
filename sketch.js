@@ -12,6 +12,9 @@ var gameState = "onSling";
 var bg = "sprites/bg1.png";
 var score = 0;
 
+//array for multiple birds
+var birds = [];
+
 function preload() {
     getBackgroundImg();
 }
@@ -41,8 +44,14 @@ function setup(){
     log5 = new Log(870,120,150, -PI/7);
 
     bird = new Bird(200,50);
+    bird2 = new Bird(150,170);
+    bird3 = new Bird(100,170);
+    
+    //adding birds to the array
+    birds.push(bird3);
+    birds.push(bird2);
+    birds.push(bird);
 
-    //log6 = new Log(230,180,80, PI/2);
     slingshot = new SlingShot(bird.body,{x:200, y:50});
 }
 
@@ -56,7 +65,7 @@ function draw(){
         text("Score  " + score, width-300, 50)
     
     Engine.update(engine);
-    //strokeWeight(4);
+    
     box1.display();
     box2.display();
     ground.display();
@@ -75,31 +84,37 @@ function draw(){
     log5.display();
 
     bird.display();
+    bird2.display();
+    bird3.display();
+
     platform.display();
-    //log6.display();
     slingshot.display();    
 }
 
 function mouseDragged(){
     if (gameState!=="launched"){
-        Matter.Body.setPosition(bird.body, {x: mouseX , y: mouseY});
+        Matter.Body.setPosition(birds[birds.length-1].body, {x: mouseX , y: mouseY});
     }
 }
 
 
 function mouseReleased(){
     slingshot.fly();
+    birds.pop(); //- removes the last bird
     gameState = "launched";
 }
 
 function keyPressed(){
-    if(keyCode === 32){
-       // slingshot.attach(bird.body);
+    if(keyCode === 32 && gameState === "launched"){
+        bird.trajectory = [];
+        Matter.Body.setPosition(birds[birds.length-1].body,{x:200,y:50});
+        slingshot.attach(birds[birds.length-1].body);
+        gameState = "onSling"
     }
 }
 
 async function getBackgroundImg(){
-    var response = await fetch("http://worldtimeapi.org/api/timezone/Asia/Kolkata");
+    var response = await fetch("https://worldtimeapi.org/api/timezone/America/New_York");
     var responseJSON = await response.json();
 
     var datetime = responseJSON.datetime;
